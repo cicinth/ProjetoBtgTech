@@ -28,7 +28,14 @@ public class ProductService {
         return  ProductConvert.toResponse(productRepository.save(product));
     }
 
-    public List<ProductResponse> getAllProduct(){
+    public List<ProductResponse> getAllProduct(Integer typeProduct){
+        if(typeProduct != null){
+            return getAllByTypeProduct(typeProduct);
+        }
         return ProductConvert.toResponseList(productRepository.findAll());
+    }
+
+    public List<ProductResponse> getAllByTypeProduct(Integer typeProduct){
+        return ProductConvert.toResponseList(productRepository.findProductByType(typeProduct));
     }
 }

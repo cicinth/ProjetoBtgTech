@@ -3,6 +3,8 @@ package com.ada.MeuPrimeiroProjeto.utils;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
 import com.ada.MeuPrimeiroProjeto.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,15 @@ public class UserConvert {
             userResponses.add(userResponse);
         }
         return userResponses;
+    }
+
+    public static Page<UserResponse> toResponsePage(Page<User> users){
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user : users) {
+            UserResponse userResponse = UserConvert.toResponse(user);
+            userResponses.add(userResponse);
+        }
+        return new PageImpl<>(userResponses);
     }
 
 

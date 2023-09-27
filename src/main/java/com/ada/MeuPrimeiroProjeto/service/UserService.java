@@ -6,6 +6,9 @@ import com.ada.MeuPrimeiroProjeto.model.User;
 import com.ada.MeuPrimeiroProjeto.repository.UserRepository;
 import com.ada.MeuPrimeiroProjeto.utils.UserConvert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +19,10 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public List<UserResponse> getUsers(){
-        List<User> users = userRepository.findAll();
-        return UserConvert.toResponseList(users);
+    public Page<UserResponse> getUsers(int page, int size, String direction){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(direction), "name");
+        Page<User> users = userRepository.findAll(pageRequest);
+        return UserConvert.toResponsePage(users);
 
     }
 
