@@ -3,6 +3,7 @@ package com.ada.MeuPrimeiroProjeto.controller;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
 import com.ada.MeuPrimeiroProjeto.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -42,26 +43,39 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> saveUser(@RequestBody UserRequest userDTO){
-
+    public ResponseEntity<UserResponse> saveUser(
+            @Valid @RequestBody UserRequest userDTO
+    ){
         UserResponse user =  userService.saveUser(userDTO);
         return ResponseEntity.created(URI.create("/user/"+user.getId())).body(user);
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable Integer id){
-        return userService.getUserById(id);
+    public ResponseEntity<UserResponse> getUser(@PathVariable Integer id){
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/email/{email}")
-    public UserResponse getUserByEmail(@PathVariable String email){
-        return userService.getUserByEmail(email);
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email){
+        return  ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
     @GetMapping("/name/{name}")
-    public List<UserResponse> getAllUserByName(@PathVariable String name, @PathVariable Integer id){
-        return userService.getAllByName(name);
+    public ResponseEntity<List<UserResponse>> getAllUserByName(@PathVariable String name, @PathVariable Integer id){
+        return ResponseEntity.ok(userService.getAllByName(name));
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id){
+        userService.deleteUser(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Integer id,
+            @RequestBody UserRequest userRequest
+    ){
+        return  ResponseEntity.ok(userService.updateUser(id, userRequest));
+    }
 }
 

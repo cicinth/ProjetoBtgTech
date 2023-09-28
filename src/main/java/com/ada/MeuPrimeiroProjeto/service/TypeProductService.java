@@ -26,4 +26,8 @@ public class TypeProductService {
         );
         return TypeProductConvert.toResponse(typeProduct);
     }
+
+    public void deleteTypeProduct(Integer id){
+        typeProductRepository.deleteById(id);
+    }
 }

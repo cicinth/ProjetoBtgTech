@@ -19,6 +19,6 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @ManyToOne
+    @ManyToOne()
     private TypeProduct type;
 }

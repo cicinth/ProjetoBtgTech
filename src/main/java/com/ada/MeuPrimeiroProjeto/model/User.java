@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 @Entity
 @Table(name = "users")
+@Where(clause = "active is true")
 public class User {
 
     @Id
@@ -25,6 +27,8 @@ public class User {
 
     @Column(name = "password",nullable = false)
     private Integer password;
+
+    private Boolean active;
 
 }
 

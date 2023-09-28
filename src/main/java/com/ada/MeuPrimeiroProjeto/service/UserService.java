@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -28,12 +29,18 @@ public class UserService {
 
     public UserResponse saveUser(UserRequest userDTO){
         User user = UserConvert.toEntity(userDTO);
+        user.setActive(true);
         User userEntity = userRepository.save(user);
         return UserConvert.toResponse(userEntity);
     }
 
     public UserResponse getUserById(Integer id){
-        return UserConvert.toResponse(userRepository.findById(id).get());
+        Optional<User> userResponse =  userRepository.findById(id);
+        if(userResponse.isPresent()){
+            return UserConvert.toResponse(userResponse.get());
+        } else {
+            throw new RuntimeException("nao encontrado");
+        }
     }
 
     public UserResponse getUserByEmail(String email){
@@ -42,6 +49,18 @@ public class UserService {
 
     public List<UserResponse> getAllByName(String name){
         return UserConvert.toResponseList(userRepository.findAllByName(name));
+    }
+
+    public void deleteUser(Integer id){
+        User user = userRepository.findById(id).orElseThrow();
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    public UserResponse updateUser(Integer id, UserRequest userRequest){
+        User user = UserConvert.toEntity(userRequest);
+        user.setId(id);
+        return UserConvert.toResponse(userRepository.save(user));
     }
 
 }
