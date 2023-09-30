@@ -2,6 +2,7 @@ package com.ada.MeuPrimeiroProjeto.controller;
 
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
+import com.ada.MeuPrimeiroProjeto.controller.exception.PasswordValidationError;
 import com.ada.MeuPrimeiroProjeto.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> saveUser(
             @Valid @RequestBody UserRequest userDTO
-    ){
+    ) throws PasswordValidationError {
         UserResponse user =  userService.saveUser(userDTO);
         return ResponseEntity.created(URI.create("/user/"+user.getId())).body(user);
     }

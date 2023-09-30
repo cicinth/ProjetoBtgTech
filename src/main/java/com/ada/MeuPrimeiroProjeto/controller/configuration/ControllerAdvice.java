@@ -1,10 +1,12 @@
 package com.ada.MeuPrimeiroProjeto.controller.configuration;
 
+import com.ada.MeuPrimeiroProjeto.controller.exception.PasswordValidationError;
 import com.ada.MeuPrimeiroProjeto.controller.exception.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,5 +35,12 @@ public class ControllerAdvice {
          });
 
          return errors;
+    }
+
+
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PasswordValidationError.class)
+    public String handlerPassword(PasswordValidationError exception){
+        return exception.getDescription();
     }
 }

@@ -2,9 +2,12 @@ package com.ada.MeuPrimeiroProjeto.service;
 
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
+import com.ada.MeuPrimeiroProjeto.controller.exception.PasswordValidationError;
 import com.ada.MeuPrimeiroProjeto.model.User;
 import com.ada.MeuPrimeiroProjeto.repository.UserRepository;
 import com.ada.MeuPrimeiroProjeto.utils.UserConvert;
+import com.ada.MeuPrimeiroProjeto.utils.Validator;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +30,10 @@ public class UserService {
 
     }
 
-    public UserResponse saveUser(UserRequest userDTO){
+    public UserResponse saveUser(UserRequest userDTO) throws PasswordValidationError {
         User user = UserConvert.toEntity(userDTO);
         user.setActive(true);
+        if(!Validator.passwordValidate(user.getPassword())) throw new PasswordValidationError("Senha deve seguir o padrao");
         User userEntity = userRepository.save(user);
         return UserConvert.toResponse(userEntity);
     }
