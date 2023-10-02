@@ -3,9 +3,13 @@ package com.ada.MeuPrimeiroProjeto.utils;
 import com.ada.MeuPrimeiroProjeto.controller.dto.OrderRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.OrderResponse;
 import com.ada.MeuPrimeiroProjeto.controller.dto.ProductResponse;
+import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
 import com.ada.MeuPrimeiroProjeto.model.Order;
 import com.ada.MeuPrimeiroProjeto.model.Product;
 import com.ada.MeuPrimeiroProjeto.model.User;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,5 +40,14 @@ public class OrderConvert {
         }
 
         return ordersResponse;
+    }
+
+    public static Page<OrderResponse> toResponsePage(Page<Order> orders){
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            OrderResponse orderResponse = OrderConvert.toResponse(order);
+            orderResponses.add(orderResponse);
+        }
+        return new PageImpl<>(orderResponses);
     }
 }

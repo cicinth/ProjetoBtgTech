@@ -3,10 +3,12 @@ package com.ada.MeuPrimeiroProjeto.service;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserRequest;
 import com.ada.MeuPrimeiroProjeto.controller.dto.UserResponse;
 import com.ada.MeuPrimeiroProjeto.controller.exception.PasswordValidationError;
+import com.ada.MeuPrimeiroProjeto.model.QUser;
 import com.ada.MeuPrimeiroProjeto.model.User;
 import com.ada.MeuPrimeiroProjeto.repository.UserRepository;
 import com.ada.MeuPrimeiroProjeto.utils.UserConvert;
 import com.ada.MeuPrimeiroProjeto.utils.Validator;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +50,9 @@ public class UserService {
     }
 
     public UserResponse getUserByEmail(String email){
-        return UserConvert.toResponse(userRepository.findByEmail(email).get());
+        QUser qUser = QUser.user;
+        BooleanExpression booleanExpression =  qUser.email.eq(email);
+        return UserConvert.toResponse(userRepository.findOne(booleanExpression).get());
     }
 
     public List<UserResponse> getAllByName(String name){
