@@ -36,6 +36,7 @@ public class User implements UserDetails {
 
     private Boolean active;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));

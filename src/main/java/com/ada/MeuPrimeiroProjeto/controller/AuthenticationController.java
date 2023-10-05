@@ -1,6 +1,9 @@
 package com.ada.MeuPrimeiroProjeto.controller;
 
+import com.ada.MeuPrimeiroProjeto.Infra.security.TokenService;
 import com.ada.MeuPrimeiroProjeto.controller.dto.LoginRequest;
+import com.ada.MeuPrimeiroProjeto.controller.dto.TokenResponse;
+import com.ada.MeuPrimeiroProjeto.model.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid LoginRequest loginRequest){
 
@@ -26,8 +32,9 @@ public class AuthenticationController {
                loginRequest.getPassword()
         );
 
-        authenticationManager.authenticate(autheticate);
+        var authentication = authenticationManager.authenticate(autheticate);
+        var token = tokenService.tokenGenerate((User) authentication.getPrincipal());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new TokenResponse(token));
     }
 }
